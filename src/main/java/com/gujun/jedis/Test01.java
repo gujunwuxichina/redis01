@@ -18,7 +18,7 @@ public class Test01 {
     @Test
     public void test01(){
         Jedis jedis=new Jedis("127.0.0.1",6379);
-        jedis.auth("gujun");    //密码
+//        jedis.auth("gujun");    //密码
         long i=0;
         try{
             long start=System.currentTimeMillis();
