@@ -5,7 +5,10 @@ import com.gujun.spring.config.SpringConfig01;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 
 /**
  * @ClassName gu
@@ -34,6 +37,24 @@ public class Test01 {
         Person person=new Person("小李",22);
         redisTemplate.opsForValue().set("p1",person);
         Person p= (Person) redisTemplate.opsForValue().get("p1");
+        //上面两个使用redisTemplate的操作可能是来自同一连接池的不同redis连接；
+        //为了保证来自同一redis连接，可以使用SessionCallback接口；
+        //通过该接口就可以把多个命令放入同一个redis连接去执行；
+        System.out.println(p);
+    }
+
+    @Test
+    public void test02(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String,Object> redisTemplate=context.getBean(RedisTemplate.class);
+        Person person=new Person("小李",22);
+        Person p=redisTemplate.execute(new SessionCallback<Person>() {
+            @Override
+            public Person execute(RedisOperations redisOperations) throws DataAccessException {
+                redisOperations.boundValueOps("p1").set(person);
+                return (Person) redisOperations.boundValueOps("p1").get();
+            }
+        });
         System.out.println(p);
     }
 

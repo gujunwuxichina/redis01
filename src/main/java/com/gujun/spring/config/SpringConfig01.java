@@ -23,7 +23,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * @Version 1.0
  **/
 @Configuration
-@ImportResource({"classpath:spring-config01.xml"})
+@ImportResource({"classpath:spring-config01.xml"})  //引入xml配置文件
 public class SpringConfig01 {
 
     @Bean
@@ -63,7 +63,7 @@ public class SpringConfig01 {
         RedisTemplate<String,Object> redisTemplate=new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(stringRedisSerializer());
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer()); //用这个,值不会乱码
         return redisTemplate;
     }
 
