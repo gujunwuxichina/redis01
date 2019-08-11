@@ -58,4 +58,11 @@ public class Test01 {
         System.out.println(p);
     }
 
+    @Test
+    public void test03(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String,String> redisTemplate=context.getBean(RedisTemplate.class);
+        redisTemplate.opsForValue().set("name","顾隽");
+    }
+
 }

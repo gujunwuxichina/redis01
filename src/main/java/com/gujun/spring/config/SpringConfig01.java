@@ -15,6 +15,8 @@ import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.util.Map;
+
 /**
  * @ClassName gu
  * @Description TODO
@@ -34,7 +36,7 @@ public class SpringConfig01 {
         ////设置redis服务器的host,ip地址,数据库，此处没设置密码
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(port);
-//        redisStandaloneConfiguration.setPassword();
+        redisStandaloneConfiguration.setPassword("gujun");
         redisStandaloneConfiguration.setDatabase(database);
         JedisClientConfiguration.JedisPoolingClientConfigurationBuilder jpcf = (JedisClientConfiguration.JedisPoolingClientConfigurationBuilder) JedisClientConfiguration.builder();
         jpcf.poolConfig(jedisPoolConfig);
@@ -58,14 +60,20 @@ public class SpringConfig01 {
         return new GenericJackson2JsonRedisSerializer();
     }
 
-    @Bean
+    @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(@Autowired RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate=new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(stringRedisSerializer());
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer()); //用这个,值不会乱码
+        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer()); //用这个,值不会乱码,但是数值型字符串增减操作会报错；
+        redisTemplate.setHashKeySerializer(genericJackson2JsonRedisSerializer());
+        redisTemplate.setHashValueSerializer(stringRedisSerializer());
+//        redisTemplate.setValueSerializer(stringRedisSerializer());
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
+
+
 
 
 }
