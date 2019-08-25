@@ -65,10 +65,10 @@ public class SpringConfig01 {
         RedisTemplate<String,Object> redisTemplate=new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(stringRedisSerializer());
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer()); //用这个,值不会乱码,但是数值型字符串增减操作会报错；
+//        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer()); //用这个,值不会乱码,但是数值型字符串增减操作会报错；
         redisTemplate.setHashKeySerializer(genericJackson2JsonRedisSerializer());
         redisTemplate.setHashValueSerializer(stringRedisSerializer());
-//        redisTemplate.setValueSerializer(stringRedisSerializer());
+        redisTemplate.setValueSerializer(stringRedisSerializer());
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }

@@ -36,12 +36,25 @@ public class StringTest {
     //decr key 减一，decrby num 减去多少；若一开始set key value 就设置浮点数，则incr/incrby/decr/decrby命令会失效；
     //incrbyfloat key num 加上浮点数
 
-
     //字符串由多个字节（字符）组成，每个字节8个bit;
     //可以将一个字符串看成很多bit的组合，便是bitmap(位图)数据结构；
 
     @Test
     public void test01(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String,String> redisTemplate=context.getBean(RedisTemplate.class);
+        redisTemplate.opsForValue().set("k1","gujun");
+        System.out.println(redisTemplate.opsForValue().get("k1"));
+        System.out.println(redisTemplate.opsForValue().size("k1"));
+        System.out.println(redisTemplate.opsForValue().get("k1",1,2)); //求子串
+        System.out.println(redisTemplate.opsForValue().getAndSet("k1","gj"));//设新值返回旧值
+        redisTemplate.opsForValue().append("k1","java");    //添加到末尾
+        System.out.println(redisTemplate.opsForValue().get(("k1")));
+        redisTemplate.delete("k1");
+    }
+
+    @Test
+    public void test02(){
         ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
         RedisTemplate<String,String> redisTemplate=context.getBean(RedisTemplate.class);
         redisTemplate.execute(new SessionCallback<Object>() {
