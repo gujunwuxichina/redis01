@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.SessionCallback;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +48,29 @@ public class HashTest {
 
     @Test
     public void test01(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String, Map<String,String>> redisTemplate= (RedisTemplate<String,  Map<String,String>>) context.getBean("redisTemplate");
+        Map<String,String> map=new HashMap<>();
+        map.put("name","gujun");
+        map.put("city","wuxi");
+        redisTemplate.opsForHash().putAll("m1",map);
+        System.out.println(redisTemplate.opsForHash().get("m1","name"));
+        redisTemplate.opsForHash().put("m1","age","22");
+        System.out.println(redisTemplate.opsForHash().get("m1","age"));
+        System.out.println(redisTemplate.opsForHash().hasKey("m1","city"));
+        Map<Object, Object> map1=redisTemplate.opsForHash().entries("m1");
+        redisTemplate.opsForHash().increment("m1","age",10);
+        System.out.println(redisTemplate.opsForHash().get("m1","age"));
+        List<Object> values=redisTemplate.opsForHash().values("m1");
+        for(Object obj:values){
+            System.out.println(obj);
+        }
+        System.out.println(redisTemplate.opsForHash().putIfAbsent("m1","name","gj"));   //不存在才设置键值对,返回boolean;
+        redisTemplate.delete("m1");
+    }
+
+    @Test
+    public void test02(){
         ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
         RedisTemplate<String, Map<String,String>> redisTemplate= (RedisTemplate<String,  Map<String,String>>) context.getBean("redisTemplate");
         redisTemplate.execute(new SessionCallback<Object>() {

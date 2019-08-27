@@ -50,7 +50,11 @@ public class StringTest {
         System.out.println(redisTemplate.opsForValue().getAndSet("k1","gj"));//设新值返回旧值
         redisTemplate.opsForValue().append("k1","java");    //添加到末尾
         System.out.println(redisTemplate.opsForValue().get(("k1")));
+        redisTemplate.opsForValue().set("k2","20");
+        redisTemplate.opsForValue().increment("k2",2);
+        System.out.println(redisTemplate.opsForValue().get("k2"));
         redisTemplate.delete("k1");
+        redisTemplate.delete("k2");
     }
 
     @Test
