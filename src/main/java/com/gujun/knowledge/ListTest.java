@@ -25,7 +25,7 @@ import java.util.List;
 public class ListTest {
 
     //列表
-    //相当于Java中的LinkedList;插入删除较快，但索引定位很慢；
+    //相当于Java中的LinkedList;插入删除较快，但索引定位查找很慢；
     //列表中每个元素都使用双向指针顺序，同时支持向前向后遍历；
 
     //因为是双向列表，命令分为左操作和右操作：
@@ -47,6 +47,18 @@ public class ListTest {
 
     @Test
     public void test01(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String,String> redisTemplate=context.getBean(RedisTemplate.class);
+        redisTemplate.opsForList().leftPush("l1","gj");
+        List<String> list=Arrays.asList(new String[]{"gujun","wuxi","java"});
+        redisTemplate.opsForList().leftPushAll("l1",list);
+        System.out.println(redisTemplate.opsForList().index("l1",0));
+        System.out.println(redisTemplate.opsForList().size("l1"));
+        System.out.println(redisTemplate.opsForList().leftPop("l1"));   //从左边弹出第一个节点；
+     }
+
+    @Test
+    public void test02(){
         ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
         RedisTemplate<String, List<String>> redisTemplate=context.getBean(RedisTemplate.class);
         redisTemplate.execute(new SessionCallback<Object>() {

@@ -24,8 +24,9 @@ import java.util.Set;
 public class SetTest {
 
     //set集合：
-    //相当于Java中的HashSet，内部键值对（内部实现是个特殊的字典，value是一个null）是无序的，唯一的；
+    //相当于Java中的HashSet，内部键值对（内部实现是个特殊的字典，value是一个null）是无序的，唯一的；✳
     //集合中最后一个元素被移除后，该数据结构也被字段删除，内存释放；
+    //采用哈希表结构，所以对于插入、删除、查找的性能都还行；
 
     //sadd key v1 v2 ... ;
     //scard key 返回指定set的成员数；
@@ -45,7 +46,23 @@ public class SetTest {
     @Test
     public void test01(){
         ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
-        RedisTemplate<String, Set<String>> redisTemplate=context.getBean(RedisTemplate.class);
+        RedisTemplate<String, String> redisTemplate=context.getBean(RedisTemplate.class);
+        redisTemplate.boundSetOps("s1").add("gj","wuxi","java");
+        redisTemplate.boundSetOps("s2").add("gujun","wx","java");
+        Set<String> difference=redisTemplate.opsForSet().difference("s1","s2"); //求差值
+        difference.forEach(s -> System.out.println(s));
+        Set<String> union=redisTemplate.opsForSet().union("s1","s2");
+        union.forEach(s-> System.out.println(s));
+        Set<String> set=redisTemplate.opsForSet().members("s1");    //获取所有元素
+        set.forEach(s -> System.out.println(s));
+        System.out.println(redisTemplate.opsForSet().pop("s1"));    //随机弹出一个元素；
+        System.out.println(redisTemplate.opsForSet().randomMember("s1"));   //随机获取一个元素；
+    }
+
+    @Test
+    public void test02(){
+        ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
+        RedisTemplate<String, String> redisTemplate=context.getBean(RedisTemplate.class);
         redisTemplate.execute(new SessionCallback<Object>() {
             @Override
             public  Object execute(RedisOperations redisOperations) throws DataAccessException {

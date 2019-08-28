@@ -36,7 +36,7 @@ public class SpringConfig01 {
         ////设置redis服务器的host,ip地址,数据库，此处没设置密码
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setPassword("gujun");
+//        redisStandaloneConfiguration.setPassword("gujun");
         redisStandaloneConfiguration.setDatabase(database);
         JedisClientConfiguration.JedisPoolingClientConfigurationBuilder jpcf = (JedisClientConfiguration.JedisPoolingClientConfigurationBuilder) JedisClientConfiguration.builder();
         jpcf.poolConfig(jedisPoolConfig);
