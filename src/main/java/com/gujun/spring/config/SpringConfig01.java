@@ -3,6 +3,7 @@ package com.gujun.spring.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,6 +11,10 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -26,6 +31,7 @@ import java.util.Map;
  **/
 @Configuration
 @ImportResource({"classpath:spring-config01.xml"})  //引入xml配置文件
+@ComponentScan(basePackages={"com.gujun"})
 public class SpringConfig01 {
 
     @Bean
@@ -73,7 +79,20 @@ public class SpringConfig01 {
         return redisTemplate;
     }
 
+    //redis监听类适配器
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter(@Autowired RedisMessageListener redisMessageListener){
+        return new MessageListenerAdapter(redisMessageListener);
+    }
 
+    //redis监听容器
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory,MessageListenerAdapter messageListenerAdapter){
+        RedisMessageListenerContainer redisMessageListenerContainer=new RedisMessageListenerContainer();
+        redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
+        redisMessageListenerContainer.addMessageListener(messageListenerAdapter,new PatternTopic("msg01"));
+        return redisMessageListenerContainer;
+    }
 
 
 }
