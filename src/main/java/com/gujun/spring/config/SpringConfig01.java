@@ -34,6 +34,7 @@ import java.util.Map;
 @ComponentScan(basePackages={"com.gujun"})
 public class SpringConfig01 {
 
+    //连接工厂，新的配置方法；
     @Bean
     public RedisConnectionFactory redisConnectionFactory(@Autowired JedisPoolConfig jedisPoolConfig,
      @Value("${redis.host}")  String host,@Value("${redis.port}") int port,@Value("${redis.database}") int database

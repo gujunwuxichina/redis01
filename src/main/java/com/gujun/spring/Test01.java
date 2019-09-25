@@ -37,12 +37,12 @@ public class Test01 {
         Person person=new Person("小李",22);
         redisTemplate.opsForValue().set("p1",person);
         Person p= (Person) redisTemplate.opsForValue().get("p1");
-        //上面两个使用redisTemplate的操作可能是来自同一连接池的不同redis连接；
-        //为了保证来自同一redis连接，可以使用SessionCallback接口；
-        //通过该接口就可以把多个命令放入同一个redis连接去执行；
         System.out.println(p);
     }
 
+    //上面两个使用redisTemplate的操作可能是来自同一连接池的不同redis连接；✳
+    //为了保证来自同一redis连接，可以使用SessionCallback接口；
+    //通过该接口就可以把多个命令放入同一个redis连接去执行；
     @Test
     public void test02(){
         ApplicationContext context=new AnnotationConfigApplicationContext(SpringConfig01.class);
